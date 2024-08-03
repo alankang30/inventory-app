@@ -3,8 +3,10 @@
 import Image from "next/image";
 import { useState, useEffect } from "react"; // state variables and client sided functions from react
 import { firestore } from "../firebase"; // firestore is the database 
-import { Stack, Box, Button, Container, Grid, Modal, Typography, TextField } from "@mui/material"; // component library
+import { Stack, Box, Button, Fab, Modal, Typography, TextField, ButtonGroup } from "@mui/material"; // component library
 import { deleteDoc, doc, getDocs, getDoc, query, collection, setDoc } from "firebase/firestore";
+import { AddIcon } from '@mui/icons-material/Add';
+
 
 /*
   This page.js file is the main component for this project.
@@ -69,6 +71,13 @@ export default function Home() {
       }
     }
 
+    await updateInventory()
+  }
+
+  const deleteItem = async (item) => {
+    // delete item from firestore
+    const docRef = doc(collection(firestore, 'inventory'), item)
+    await deleteDoc(docRef)
     await updateInventory()
   }
 
@@ -152,22 +161,48 @@ export default function Home() {
                 textAlign="center">
                 {quantity}
               </Typography>
-              <Stack
-                direction="row"
-                spacing={2}>
-                <Button variant="contained"
+              <Box>
+              {/* button group for add and remove */}
+              <ButtonGroup
+              variant="outlined"
+              color="primary"
+              orientation="vertical"
+              size="small"
+              >
+                <Button
                   onClick={() => {
                     addItem(name)
                   }}>
-                  Add
+                  Add 1
                 </Button>
-                <Button variant="contained"
+                <Button
                   onClick={() => {
                     removeItem(name)
                   }}>
-                  Remove
+                  Remove 1 
                 </Button>
-              </Stack>
+              </ButtonGroup>
+              {/* button group for delete and edit */}
+              <ButtonGroup 
+              variant="contained"
+              orientation="vertical"
+              size="small"
+              >
+                <Button
+                onClick={() => {
+                  // TODO edit item function
+                }}>
+                  Edit
+                </Button>
+                <Button
+                  height="100px"
+                  onClick={() => {
+                    deleteItem(name)
+                  }}>
+                  Delete
+                </Button>
+                </ButtonGroup>
+                </Box>
             </Box>
           ))}
         </Stack>
